@@ -33,6 +33,7 @@ public class OrderController {
 	public ResponseEntity<UserOrder> submit(@PathVariable String username) {
 		User user = userRepository.findByUsername(username);
 		if(user == null) {
+			System.out.println("test");
 			log.error("Order creation has been failed!");
 			return ResponseEntity.notFound().build();
 
@@ -49,6 +50,7 @@ public class OrderController {
 	public ResponseEntity<List<UserOrder>> getOrdersForUser(@PathVariable String username) {
 		User user = userRepository.findByUsername(username);
 		if(user == null) {
+
 			log.error("Your request has been failed!");
 			return ResponseEntity.notFound().build();
 		}
