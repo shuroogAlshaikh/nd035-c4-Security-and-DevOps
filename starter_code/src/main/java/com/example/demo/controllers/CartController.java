@@ -19,36 +19,44 @@ import com.example.demo.model.persistence.repositories.ItemRepository;
 import com.example.demo.model.persistence.repositories.UserRepository;
 import com.example.demo.model.requests.ModifyCartRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {
-	
+	Logger log = LoggerFactory.getLogger(UserController.class);
+
 	@Autowired
-	private UserRepository userRepository;
-	
+	UserRepository userRepository;
+
 	@Autowired
-	private CartRepository cartRepository;
-	
+	CartRepository cartRepository;
+
 	@Autowired
-	private ItemRepository itemRepository;
-	
+	ItemRepository itemRepository;
+
 	@PostMapping("/addToCart")
 	public ResponseEntity<Cart> addTocart(@RequestBody ModifyCartRequest request) {
 		User user = userRepository.findByUsername(request.getUsername());
+
+
 		if(user == null) {
+			log.error("Your request has been failed!");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 		Optional<Item> item = itemRepository.findById(request.getItemId());
 		if(!item.isPresent()) {
+			log.error("Your request has been failed!");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 		Cart cart = user.getCart();
 		IntStream.range(0, request.getQuantity())
-			.forEach(i -> cart.addItem(item.get()));
+				.forEach(i -> cart.addItem(item.get()));
 		cartRepository.save(cart);
 		return ResponseEntity.ok(cart);
 	}
-	
+
 	@PostMapping("/removeFromCart")
 	public ResponseEntity<Cart> removeFromcart(@RequestBody ModifyCartRequest request) {
 		User user = userRepository.findByUsername(request.getUsername());
@@ -57,13 +65,14 @@ public class CartController {
 		}
 		Optional<Item> item = itemRepository.findById(request.getItemId());
 		if(!item.isPresent()) {
+			log.error("Your request has been failed!");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 		Cart cart = user.getCart();
 		IntStream.range(0, request.getQuantity())
-			.forEach(i -> cart.removeItem(item.get()));
+				.forEach(i -> cart.removeItem(item.get()));
 		cartRepository.save(cart);
 		return ResponseEntity.ok(cart);
 	}
-		
+
 }

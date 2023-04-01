@@ -22,16 +22,28 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonProperty
 	private long id;
-	
+
 	@Column(nullable = false, unique = true)
 	@JsonProperty
 	private String username;
-	
+
+	private String password;
+
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
 	@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id", referencedColumnName = "id")
+	@JoinColumn(name = "cart_id", referencedColumnName = "id")
 	@JsonIgnore
-    private Cart cart;
-	
+	private Cart cart;
+
 	public Cart getCart() {
 		return cart;
 	}
@@ -55,7 +67,7 @@ public class User {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
-	
-	
+
+
+
 }
